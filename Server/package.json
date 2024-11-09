@@ -2,10 +2,10 @@
   "name": "whiteboard-sharing-app-server",
   "version": "1.0.0",
   "description": "this is the white board sharing app server",
-  "main": "server.js",
+  "main": "index.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js"
+    "start": "node index.js",
+    "dev": "nodemon index.js"
   },
   "author": "Shubham Agrawal",
   "license": "ISC",

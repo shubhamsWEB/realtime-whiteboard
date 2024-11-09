@@ -82,7 +82,7 @@ const Room = () => {
         }
     };
     const handleOnLeaveRoom = () => {
-        socket.emit("user-leave", user);
+        socket.disconnect();
         router.push('/')
     }
 

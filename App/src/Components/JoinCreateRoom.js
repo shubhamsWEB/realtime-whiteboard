@@ -1,10 +1,12 @@
+// src/components/JoinCreateRoom.js
 'use client'
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { toast } from "react-toastify";
 import { useRouter } from 'next/navigation';
 import { useUserContext } from "../services/context/userContext";
-import {getUserId,uuid} from '../utils/roomUtils';
+import { getUserId, uuid } from '../utils/roomUtils';
+
 const JoinCreateRoom = () => {
   const [roomId, setRoomId] = useState(uuid());
   const [name, setName] = useState("");
@@ -12,36 +14,25 @@ const JoinCreateRoom = () => {
   const [joinRoomId, setJoinRoomId] = useState("");
   const router = useRouter();
   const { updateUser } = useUserContext();
+
+  const saveUserInfo = useCallback((userName, roomId) => {
+    const userInfo = { userId: getUserId(), userName };
+    updateUser({ ...userInfo, roomId });
+    localStorage.setItem('userInfo', JSON.stringify(userInfo));
+    router.push(`/room/${roomId}`);
+  }, [updateUser, router]);
+
   const handleCreateSubmit = (e) => {
     e.preventDefault();
     if (!name) return toast.dark("Please enter your name!");
-
-    updateUser({
-      roomId,
-      userId: getUserId(),
-      userName: name,
-    });
-    localStorage.setItem('userInfo',JSON.stringify({
-      userId: getUserId(),
-      userName: name,
-    }))
-    router.push(`/room/${roomId}`);
+    saveUserInfo(name, roomId);
   };
+
   const handleJoinSubmit = (e) => {
     e.preventDefault();
     if (!joinName) return toast.error("Please enter your name!");
-    if (!joinRoomId) return toast.error("Please enter room id");
-
-    updateUser({
-      roomId: joinRoomId,
-      userId: getUserId(),
-      userName: joinName,
-    });
-    localStorage.setItem('userInfo',JSON.stringify({
-      userId: getUserId(),
-      userName: joinName,
-    }))
-    router.push(`/room/${joinRoomId}`);
+    if (!joinRoomId) return toast.error("Please enter room ID");
+    saveUserInfo(joinName, joinRoomId);
   };
 
   return (
@@ -50,6 +41,7 @@ const JoinCreateRoom = () => {
         Welcome To Realtime Whiteboard Sharing App
       </h1>
       <div className="grid grid-cols-2 gap-4 p-10">
+        {/* Create Room Section */}
         <div className="border p-4 rounded">
           <h1 className="text-center mb-5 font-bold text-xl">Create Room</h1>
           <form onSubmit={handleCreateSubmit}>
@@ -67,7 +59,7 @@ const JoinCreateRoom = () => {
                 type="text"
                 className="w-full p-2"
                 value={roomId}
-                readOnly={true}
+                readOnly
               />
               <div className="flex p-2">
                 <button
@@ -80,7 +72,7 @@ const JoinCreateRoom = () => {
                 &nbsp;&nbsp;
                 <CopyToClipboard
                   text={roomId}
-                  onCopy={() => toast.success("Room Id Copied To Clipboard!")}
+                  onCopy={() => toast.success("Room ID Copied To Clipboard!")}
                 >
                   <button
                     className="rounded bg-blue-500 p-1 text-white"
@@ -91,13 +83,13 @@ const JoinCreateRoom = () => {
                 </CopyToClipboard>
               </div>
             </div>
-            <div className="form-group mt-5">
-              <button type="submit" className="w-full bg-green-600 rounded-md p-2 text-white">
-                Create Room
-              </button>
-            </div>
+            <button type="submit" className="w-full bg-green-600 rounded-md p-2 text-white mt-5">
+              Create Room
+            </button>
           </form>
         </div>
+        
+        {/* Join Room Section */}
         <div className="border p-4 rounded">
           <h1 className="text-center mb-5 font-bold text-xl">Join Room</h1>
           <form onSubmit={handleJoinSubmit}>
@@ -116,17 +108,12 @@ const JoinCreateRoom = () => {
                 className="w-full p-2 border rounded"
                 value={joinRoomId}
                 onChange={(e) => setJoinRoomId(e.target.value)}
-                placeholder="Room Id"
-                style={{
-                  boxShadow: "none",
-                }}
+                placeholder="Room ID"
               />
             </div>
-            <div className="form-group mt-5">
-              <button type="submit" className="w-full bg-blue-600 rounded-md p-2 text-white">
-                Join Room
-              </button>
-            </div>
+            <button type="submit" className="w-full bg-blue-600 rounded-md p-2 text-white mt-5">
+              Join Room
+            </button>
           </form>
         </div>
       </div>
