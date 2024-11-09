@@ -1,7 +1,7 @@
 // src/utils/socketUtils.js
 import { io } from 'socket.io-client';
 
-const server = "http://localhost:5000";
+const server = process.env.NEXT_PUBLIC_SOCKET_SERVER;
 const connectionOptions = {
     "force new connection": true,
     reconnectionAttempts: "Infinity",

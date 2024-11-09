@@ -1,36 +1,49 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
+---
 
-First, run the development server:
+### **Client README** (for `client/` folder)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+```markdown
+# Collaborative Drawing App - Client
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+This is the client-side code for the Collaborative Drawing App. It allows users to join rooms and collaborate on a shared canvas using `React` and `Socket.io`.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## Features
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Real-time drawing**: Multiple users can draw on the same canvas in real-time.
+- **Drawing tools**: Pencil and line tool for creating drawings.
+- **Color picker**: Allows users to choose a custom drawing color.
+- **Canvas controls**: Clear the canvas and view the number of online users in the room.
+- **User management**: See which users are currently online in the same room.
 
-## Learn More
+## Prerequisites
 
-To learn more about Next.js, take a look at the following resources:
+Before running the client, make sure you have the following installed:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Node.js (>= 16.x)
+- npm or Yarn
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## File Structure
 
-## Deploy on Vercel
+src/
+│
+├── components/               # React components used in the app
+│   ├── Canvas.js             # Canvas component where users draw
+│   ├── Sidebar.js            # Sidebar component for user list
+│   └── JoinCreateRoom.js     # Component for Joining/Create new room
+│   └── Room.js               # Component for handling Drawing and for tool selection and color picker
+│
+├── app/                      # Next.js pages
+│   ├── page.js               # Landing page for the app
+│   └── room/[roomId].js      # Room page, where users join and draw together
+│
+│
+├── services/                 # Application-specific services and utilities
+│   ├── context/              # Context for global state (e.g., user state)
+│
+│
+├── utils/                    # helper utils
+│   ├── roomUtils.js          # utils for room component
+│   ├── socketUtils.js        # utils for socket connection
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
