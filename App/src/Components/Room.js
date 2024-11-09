@@ -2,25 +2,17 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { io } from 'socket.io-client';
 import rough from 'roughjs/bundled/rough.esm';
-import Canvas from './canvas';
+import Canvas from './Canvas';
 import { useParams } from 'next/navigation';
 import { useUserContext } from '../services/context/userContext';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
-const server = "http://localhost:5000";
-const connectionOptions = {
-    "force new connection": true,
-    reconnectionAttempts: "Infinity",
-    timeout: 10000,
-    transports: ["websocket"],
-};
-
-const socket = io(server, connectionOptions);
+import { joinRoom, socket, disconnectSocket, sendDrawData } from '../utils/socketUtils';
 
 const Room = () => {
     const { user, updateUser, loggerData } = useUserContext();
     const canvasRef = useRef(null);
-    const hasJoined = useRef(false); // Ref to track if user has joined
+    const hasJoined = useRef(false);
     const [isDrawing, setIsDrawing] = useState(false);
     const params = useParams();
     const [lastPos, setLastPos] = useState({ x: 0, y: 0 });
@@ -28,16 +20,16 @@ const Room = () => {
     const [color, setColor] = useState("#000000");
     const [tool, setTool] = useState("pencil");
     const router = useRouter();
+
     useEffect(() => {
         if (user && !hasJoined.current) {
-            // Emit user-joined event only once
-            socket.emit("user-joined", user);
-            hasJoined.current = true; // Mark as joined to prevent duplicate emits
+            joinRoom(user)
+            hasJoined.current = true;
         } else if (loggerData) {
-            socket.emit("user-joined", { ...loggerData, roomId: params.roomId });
+            joinRoom({ ...loggerData, roomId: params.roomId })
             hasJoined.current = true;
         }
-    }, []);
+    }, [loggerData]);
 
     useEffect(() => {
         socket.on("users", (data) => {
@@ -69,7 +61,7 @@ const Room = () => {
                 roughness: 1.5,
             });
             setLastPos({ x, y });
-            socket.emit('draw', { x, y, lastPos, color, tool, isCanvasCleared: false });
+            sendDrawData({ x, y, lastPos, color, tool, isCanvasCleared: false })
         }
         if (tool === 'line') {
             ctx.current.line(lastPos.x, lastPos.y, x, y, {
@@ -78,11 +70,11 @@ const Room = () => {
                 strokeWidth: 5,
             });
             setLastPos({ x, y });
-            socket.emit('draw', { x, y, lastPos, color, tool, isCanvasCleared: false });
+            sendDrawData({ x, y, lastPos, color, tool, isCanvasCleared: false })
         }
     };
     const handleOnLeaveRoom = () => {
-        socket.disconnect();
+        disconnectSocket();
         router.push('/')
     }
 
@@ -130,7 +122,7 @@ const Room = () => {
 
                 </div>
                 <div className="text-center flex justify-center gap-4 items-center">
-                    <span>Online Users: {user?.length}</span>
+                    <span>Online Users: {user?.length -1 || "0"}</span>
                     <button className='bg-red-600 p-1 px-4 rounded text-white' onClick={handleOnLeaveRoom}>
                         Leave Room
                     </button>

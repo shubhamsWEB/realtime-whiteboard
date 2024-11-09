@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { Socket } from "socket.io-client";
+
 
 const Sidebar = ({ users, user, socket }) => {
   const sideBarRef = useRef(null);
