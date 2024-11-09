@@ -1,7 +1,7 @@
 'use client'
 import React, { useRef, useState, useEffect } from 'react';
 import rough from 'roughjs/bundled/rough.esm';
-import Canvas from './Canvas';
+import Canvas from './CanvasComp';
 import { useParams } from 'next/navigation';
 import { useUserContext } from '../services/context/userContext';
 import { toast } from 'react-toastify';
