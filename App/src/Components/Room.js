@@ -8,7 +8,7 @@ import { useUserContext } from '../services/context/userContext';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
 import { joinRoom, socket, disconnectSocket, sendDrawData } from '../utils/socketUtils';
-
+import SideNav from '../Components/Sidebar';
 const Room = () => {
     const { user, updateUser, loggerData } = useUserContext();
     const canvasRef = useRef(null);
@@ -97,35 +97,37 @@ const Room = () => {
 
     return (
         <div className='p-2'>
-            <div className="grid grid-cols-3 gap-6">
-                <div className="flex justify-evenly border rounded p-2">
-                    <div className='flex'>
-                        <h6>Color Picker : &nbsp;</h6>
-                        <input type="color" value={color} onChange={(e) => setColor(e.target.value)} />
+            <div className="flex justify-evenly gap-6 items-center">
+                <SideNav />
+                <div className='flex gap-6'>
+                    <div className="flex justify-evenly border rounded">
+                        <div className='flex items-center'>
+                            <h6>Color Picker : &nbsp;</h6>
+                            <input type="color" value={color} onChange={(e) => setColor(e.target.value)} />
+                        </div>
                     </div>
-                    <button type="button" className="bg-gray-100 p-1 px-4 rounded border border-gray-600" onClick={() => {
-                        socket.emit('draw', { x: 0, y: 0, lastPos, color, tool, isCanvasCleared: true });
-                        clearCanvas();
-                    }}>
-                        Clear Canvas
-                    </button>
-                </div>
-                <div className='flex justify-center gap-4 border rounded'>
-                    <div className='flex items-center gap-1'>
-                        <input type="radio" name="tools" id="pencil" value="pencil" checked={tool === "pencil"} onClick={(e) => setTool(e.target.value)} readOnly={true} />
-                        <label htmlFor="pencil">Pencil</label>
+                    <div className='flex justify-center gap-4 border rounded p-2 '>
+                        <div className='flex items-center gap-1'>
+                            <input type="radio" name="tools" id="pencil" value="pencil" checked={tool === "pencil"} onClick={(e) => setTool(e.target.value)} readOnly={true} />
+                            <label htmlFor="pencil">Pencil</label>
+                        </div>
+                        <div className="flex items-center gap-1">
+                            <input type="radio" name="tools" id="line" value="line" checked={tool === "line"} onClick={(e) => setTool(e.target.value)} readOnly={true} />
+                            <label htmlFor="line">Line</label>
+                        </div>
+                        <button type="button" className="bg-gray-100 p-1 px-4 rounded border border-gray-600" onClick={() => {
+                            socket.emit('draw', { x: 0, y: 0, lastPos, color, tool, isCanvasCleared: true });
+                            clearCanvas();
+                        }}>
+                            Clear Canvas
+                        </button>
                     </div>
-                    <div className="flex items-center gap-1">
-                        <input type="radio" name="tools" id="line" value="line" checked={tool === "line"} onClick={(e) => setTool(e.target.value)} readOnly={true} />
-                        <label htmlFor="line">Line</label>
+                    <div className="text-center flex justify-center gap-4 items-center">
+                        <span>Online Users: {user?.length - 1 || "0"}</span>
+                        <button className='bg-red-600 p-1 px-4 rounded text-white' onClick={handleOnLeaveRoom}>
+                            Leave Room
+                        </button>
                     </div>
-
-                </div>
-                <div className="text-center flex justify-center gap-4 items-center">
-                    <span>Online Users: {user?.length -1 || "0"}</span>
-                    <button className='bg-red-600 p-1 px-4 rounded text-white' onClick={handleOnLeaveRoom}>
-                        Leave Room
-                    </button>
                 </div>
             </div>
             <div className='flex justify-center'>
