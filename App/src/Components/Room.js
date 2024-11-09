@@ -1,6 +1,5 @@
 'use client'
 import React, { useRef, useState, useEffect } from 'react';
-import { io } from 'socket.io-client';
 import rough from 'roughjs/bundled/rough.esm';
 import Canvas from './Canvas';
 import { useParams } from 'next/navigation';
