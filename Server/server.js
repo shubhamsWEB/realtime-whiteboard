@@ -26,9 +26,9 @@ app.get("/", (req, res) => {
 let imageUrl, userRoom;
 io.on("connection", (socket) => {
   socket.on("user-joined", (data) => {
-    const { roomId, userId, userName, host, presenter } = data;
+    const { roomId, userId, userName } = data;
     userRoom = roomId;
-    const user = userJoin(socket.id, userName, roomId, host, presenter);
+    const user = userJoin(socket.id, userName, roomId);
     const roomUsers = getUsers(user.room);
     socket.join(user.room);
     socket.emit("message", {
@@ -44,6 +44,21 @@ io.on("connection", (socket) => {
   socket.on('draw', (data) => {
     // Broadcast the drawing data to all other users
     socket.broadcast.to(userRoom).emit('draw', data);
+});
+socket.on("user-leave", () => {
+  const userLeaves = userLeave(socket.id);
+  if (userLeaves) {
+    const roomUsers = getUsers(userLeaves.room);
+
+    // Notify remaining users in the room
+    io.to(userLeaves.room).emit("message", {
+      message: `${userLeaves.username} left the chat`,
+    });
+    io.to(userLeaves.room).emit("users", roomUsers);
+
+    // Leave the room
+    socket.leave(userLeaves.room);
+  }
 });
 
   socket.on("disconnect", () => {

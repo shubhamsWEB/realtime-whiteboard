@@ -2,6 +2,7 @@
   "name": "live-whiteboard",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -9,9 +10,15 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@popperjs/core": "^2.11.8",
+    "next": "15.0.3",
     "react": "19.0.0-rc-66855b96-20241106",
+    "react-copy-to-clipboard": "^5.1.0",
     "react-dom": "19.0.0-rc-66855b96-20241106",
-    "next": "15.0.3"
+    "react-toastify": "^10.0.6",
+    "roughjs": "^4.6.6",
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1"
   },
   "devDependencies": {
     "postcss": "^8",
