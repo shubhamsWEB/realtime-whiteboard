@@ -45,7 +45,7 @@ const Sidebar = () => {
         className={`fixed top-0 left-0 z-40 w-64 h-screen p-3 overflow-y-auto transition-transform ${isOpen ? "translate-x-0" : "-translate-x-full"} bg-gray-100`}
         aria-labelledby="drawer-navigation-label"
       >
-        <h5 id="drawer-navigation-label" className="text-base font-semibold text-green-500 uppercase text-center">Online Users ({user.length})</h5>
+        <h5 id="drawer-navigation-label" className="text-base font-semibold text-green-500 uppercase text-center">Online Users ({user?.length})</h5>
         <button
           type="button"
           className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 absolute top-2.5 end-2.5 inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
@@ -68,12 +68,12 @@ const Sidebar = () => {
         </button>
         <div className="py-4 overflow-y-auto">
           <ul className="space-y-2 font-medium">
-            {user?.length>0 && user?.map((u) => {
+            {(user && user?.length>0 )&& user?.map((u) => {
               return (
                 <li className="flex items-center p-1" key={u.id}>
                   <div className="h-8 w-8 rounded-full ring-2 ring-gray-900 text-sm flex justify-center items-center uppercase">{u.username.slice(0,2)}</div>
                   <a href="#" className="flex items-center p-2 text-gray-900 rounded-lg group">
-                    <span className="ms-3">{u.username} {u.id === socket.id && "- (You)"}</span>
+                    <span className="ms-3">{u?.username} {u?.id === socket.id && "- (You)"}</span>
                   </a>
                 </li>
               )

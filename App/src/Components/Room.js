@@ -1,13 +1,14 @@
 'use client'
 import React, { useRef, useState, useEffect } from 'react';
 import rough from 'roughjs/bundled/rough.esm';
-import Canvas from './CanvasComp';
+import Canvas from './Canvas';
 import { useParams } from 'next/navigation';
 import { useUserContext } from '../services/context/userContext';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
 import { joinRoom, socket, disconnectSocket, sendDrawData } from '../utils/socketUtils';
 import SideNav from '../Components/Sidebar';
+import { getRandomColor } from '@/utils/roomUtils';
 const Room = () => {
     const { user, updateUser, loggerData } = useUserContext();
     const canvasRef = useRef(null);
@@ -16,7 +17,7 @@ const Room = () => {
     const params = useParams();
     const [lastPos, setLastPos] = useState({ x: 0, y: 0 });
     const ctx = useRef(null);
-    const [color, setColor] = useState("#000000");
+    const [color, setColor] = useState(getRandomColor());
     const [tool, setTool] = useState("pencil");
     const router = useRouter();
 
@@ -76,6 +77,27 @@ const Room = () => {
         disconnectSocket();
         router.push('/')
     }
+
+    useEffect(() => {
+        // Listen for previous drawings from the server
+        socket.on("previous-drawings", (previousDrawings) => {
+            previousDrawings.forEach((drawing) => {
+                const { x, y, lastPos, color, tool, isCanvasCleared } = drawing;
+                if (isCanvasCleared) {
+                    clearCanvas();
+                } else if (tool === "pencil") {
+                    ctx.current.line(lastPos.x, lastPos.y, x, y, { stroke: color, roughness: 1.5 });
+                } else if (tool === "line") {
+                    ctx.current.line(lastPos.x, lastPos.y, x, y, { stroke: color, roughness: 0, strokeWidth: 5 });
+                }
+            });
+        });
+    
+        // Clean up listener when component unmounts
+        return () => {
+            socket.off("previous-drawings");
+        };
+    }, []);
 
     useEffect(() => {
         socket.on('draw', (data) => {

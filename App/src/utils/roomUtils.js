@@ -38,3 +38,8 @@ export const uuid = () => {
     // Convert to a positive integer and return as a unique ID
     return Math.abs(hash).toString(16); // Convert to hexadecimal string
   }
+
+  export const getRandomColor = () => {
+    const color = Math.floor(Math.random() * 16777215).toString(16); // Generates a number between 0 and 0xFFFFFF
+    return `#${color.padStart(6, '0')}`; // Ensures the color is exactly 6 characters long
+  }
