@@ -1,5 +1,11 @@
 # Collaborative Drawing App
 
+
+
+https://github.com/user-attachments/assets/20b26608-679a-456f-824c-32f29311925d
+
+
+
 A real-time collaborative drawing app where multiple users can join a room and draw together on a shared canvas. This app leverages `Socket.io` for real-time communication, and `Rough.js` for sketch-like drawings.
 
 ## Features
