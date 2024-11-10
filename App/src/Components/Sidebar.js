@@ -68,12 +68,12 @@ const Sidebar = () => {
         </button>
         <div className="py-4 overflow-y-auto">
           <ul className="space-y-2 font-medium">
-            {(user && user?.length>0 )&& user?.map((u) => {
+            {(user && user?.length>0) && user?.map((u) => {
               return (
                 <li className="flex items-center p-1" key={u.id}>
-                  <div className="h-8 w-8 rounded-full ring-2 ring-gray-900 text-sm flex justify-center items-center uppercase">{u.username.slice(0,2)}</div>
+                  <div className="h-8 w-8 rounded-full ring-2 ring-gray-900 text-sm flex justify-center items-center uppercase">{u?.username?.slice(0,2)}</div>
                   <a href="#" className="flex items-center p-2 text-gray-900 rounded-lg group">
-                    <span className="ms-3">{u?.username} {u?.id === socket.id && "- (You)"}</span>
+                    <span className="ms-3">{u.username} {u.id === socket.id && "- (You)"}</span>
                   </a>
                 </li>
               )

@@ -1,13 +1,13 @@
 'use client'
 import React, { useRef, useState, useEffect } from 'react';
 import rough from 'roughjs/bundled/rough.esm';
-import Canvas from './Canvas';
+import Canvas from './CanvasComp';
 import { useParams } from 'next/navigation';
 import { useUserContext } from '../services/context/userContext';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
 import { joinRoom, socket, disconnectSocket, sendDrawData } from '../utils/socketUtils';
-import SideNav from '../Components/Sidebar';
+import SideNav from './Sidebar';
 import { getRandomColor } from '@/utils/roomUtils';
 const Room = () => {
     const { user, updateUser, loggerData } = useUserContext();
